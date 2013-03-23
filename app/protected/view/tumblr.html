@@ -1,6 +1,12 @@
 <!-- block:contents --> 
-	<!-- Jumbotron -->
-      <div class="jumbotron">
+  <!-- if {{isset(message)}} -->
+    <div class="alert">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <strong>Warning!</strong> {{message}}
+    </div>
+  <!-- endif -->
+  
+  <div class="jumbotron">
         <h1>Tumblr Motif Inspector!</h1>
         <p class="lead">Find out all the stats about your Tumblr.</p>
       	<form method="post" action="tumblr">
