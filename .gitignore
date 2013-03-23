@@ -4,3 +4,7 @@ app/protected/viewc/main/about.php
 app/protected/viewc/main/contact.php
 
 app/protected/viewc/main/tumblr.php
+
+app/protected/viewc/main/results.php
+
+app/protected/viewc/*
