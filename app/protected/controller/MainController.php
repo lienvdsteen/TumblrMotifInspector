@@ -21,7 +21,7 @@ class MainController extends DooController {
 			else {
 				// no bloginfo found (prob this blog doesn't exist, spelling mistake?)
 				// also when private blog..
-				$data['message'] = "We couldn't find any information for this blog: $blogname. Please try again."; 
+				$data['message'] = "We couldn't find any information for this blog: $blogname . Please try again."; 
 			}
 		}
 		return $this->view()->renderLayout('main', 'tumblr', $data);
