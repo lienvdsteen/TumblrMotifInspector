@@ -13,6 +13,12 @@ class TumblrManager {
 		$this->_api = new TumblrApi();
 	}
 
+	public function getBlogAvatar() {
+		$method = 'blog/' . $this->_blogname . '.tumblr.com/avatar/128';
+		$avatar = $this->_api->makeApiCall($method, array(), false);
+		return $avatar;
+	}
+
 	public function getBlogInfo() {
 		$method = 'blog/' . $this->_blogname . '.tumblr.com/info';
 		$blogInfo = $this->_api->makeApiCall($method);
@@ -20,26 +26,11 @@ class TumblrManager {
 			return false;
 		}
 		$this->_totalPostCount = $blogInfo['blog']['posts'];
-		if ($this->_totalPostCount > 250) {
-			$this->_totalPostCount = 250;
-		}
-		return $blogInfo;
+		return $blogInfo['blog'];
 	}
 
-	public function getPosts() {
+	public function getAllPosts($offset = 0, $limit = 20) {
 		$method = 'blog/' . $this->_blogname . '.tumblr.com/posts';
-
-		while ($this->_collectedPostCount < $this->_totalPostCount) {
-			$currentPosts = $this->_getAllPosts($method, $this->_collectedPostCount);
-			if (is_array($currentPosts)) {
-				$this->_posts = array_merge($this->_posts, $currentPosts);
-				$this->_collectedPostCount = $this->_collectedPostCount + count($currentPosts);	
-			}
-		}
-		return $this->_posts;
-	}
-
-	private function _getAllPosts($method, $offset = 0, $limit = 20) {
 		$params = array(
 			'offset' => $offset,
 			'limit' => $limit
