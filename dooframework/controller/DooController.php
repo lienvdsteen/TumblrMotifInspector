@@ -645,4 +645,22 @@ class DooController {
         $str = str_replace('&amp;', '&', $str);
         return $str;
     }
+
+    private function _getAjaxToReturn($result, $error = false) {
+         $ret = array(
+            'result'    => $result,
+            'error'     => $error
+        );
+        return $ret;
+    }
+
+    public function returnAjax($result, $error = false, $allowCallback = false, $wrap = true) {
+        $ret = $wrap ? $this->_getAjaxToReturn($result, $error) : $result;
+      
+        // $this->session->messages = array();
+        $this->setContentType('json');
+        if ($allowCallback && $_GET['callback'])
+            die($_GET['callback'] . "(" . json_encode($ret) . ");");
+        die(json_encode($ret));
+    }
 }
