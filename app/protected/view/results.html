@@ -1,0 +1,117 @@
+<!-- block:contents -->
+	<div class="results">
+		<div class="general_info">
+			<h2>{{bloginfo.title}}</h2>
+			<div class="avatar">
+				<img src="{{avatar}}">
+			</div>
+			<div class="description" style="margin-top:10px;">
+				<i><!-- if {{isset(bloginfo.description)}} -->{{bloginfo.description}}<!-- endif --></i>
+			</div>
+		</div>
+
+		<div class="stats">
+			<h2>Stats:</h2>
+			<div class="post_types">
+				<div class="text_type">
+					<img src="global/img/icons/text.png" />
+					<div class="text_counter count">
+						<span>0</span>
+					</div>
+				</div>
+				<div class="photo_type">
+					<img src="global/img/icons/photo.png" />
+					<div class="photo_counter count">
+						0
+					</div>
+				</div>
+				<div class="quote_type">
+					<img src="global/img/icons/quote.png" />
+					<div class="quote_counter count">
+						0
+					</div>
+				</div>
+				<div class="link_type">
+					<img src="global/img/icons/link.png" />
+					<div class="link_counter count">
+						0
+					</div>
+				</div>
+				<div class="chat_type">
+					<img src="global/img/icons/chat.png" />
+					<div class="chat_counter count">
+						0
+					</div>
+				</div>
+				<div class="audio_type">
+					<img src="global/img/icons/audio.png" />
+					<div class="audio_counter count">
+						0
+					</div>
+				</div>
+				<div class="video_type">
+					<img src="global/img/icons/video.png" />
+					<div class="video_counter count">
+						<div class="video"></div>
+						0
+					</div>
+				</div>
+			</div>
+			<div style='clear:both;'></div>
+		</div>
+
+		<div class="share" style="display:none;">
+			Share this or go back
+		</div>
+	</div>
+
+	<style>
+		.post_types {
+			text-align: center;
+			width: 100%;
+			margin: 0 auto;
+		}
+
+		.post_types div {
+			float:left;
+			text-align: center;
+			margin-right: 10px;
+		}
+
+		.post_types .count {
+			text-align: center;
+		}
+
+	</style>
+
+
+	<script>
+		$(document).ready(function() {
+			var totalPostCount = {{bloginfo.posts}};
+			var blogname = "{{blogname}}";
+			var collectedPostCounts = 0;
+			var statsView = $('.post_types');
+
+			if (totalPostCount > 0) {
+				// we moeten blogposts ophalen
+				$.ajax({
+					type: 'POST',
+					url: 'posts/' + blogname ,
+					data: {offset: collectedPostCounts},
+					success: function(data) {
+						if (data.result && data.result.posts) {
+							if (data.result.stats) {
+								$.each(data.result.stats, function(i, v) {
+									var type = '.' + i + '_counter';
+									statsView.find(type).text(v);
+								});
+							}
+							collectedPostCounts += data.result.posts.length;
+							console.log(collectedPostCounts);
+						}
+					}
+				});
+			}
+		});
+	</script>
+<!-- endblock -->
