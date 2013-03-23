@@ -13,80 +13,66 @@
 		<div class="stats">
 			<h2>Stats:</h2>
 			<div class="post_types">
-				<div class="text_type">
-					<img src="global/img/icons/text.png" />
-					<div class="text_counter count">
-						<span>0</span>
-					</div>
-				</div>
-				<div class="photo_type">
-					<img src="global/img/icons/photo.png" />
-					<div class="photo_counter count">
+				<div class="text_type" style="display:inline-block;">
+					<img class="tip" src="global/img/icons/text.png" data-toggle="tooltip" title="Total count of text posts"/>
+					<div class="text_counter count" data-value=0>
 						0
 					</div>
 				</div>
-				<div class="quote_type">
-					<img src="global/img/icons/quote.png" />
-					<div class="quote_counter count">
+				<div class="photo_type" style="display:inline-block;">
+					<img class="tip" src="global/img/icons/photo.png" data-toggle="tooltip" title="Total count of photo posts"/>
+					<div class="photo_counter count" data-value=0>
 						0
 					</div>
 				</div>
-				<div class="link_type">
-					<img src="global/img/icons/link.png" />
-					<div class="link_counter count">
+				<div class="quote_type" style="display:inline-block">
+					<img class="tip" src="global/img/icons/quote.png" data-toggle="tooltip" title="Total count of quote posts"/>
+					<div class="quote_counter count" data-value=0>
 						0
 					</div>
 				</div>
-				<div class="chat_type">
-					<img src="global/img/icons/chat.png" />
-					<div class="chat_counter count">
+				<div class="link_type" style="display:inline-block">
+					<img class="tip" src="global/img/icons/link.png" data-toggle="tooltip" title="Total count of link posts"/>
+					<div class="link_counter count" data-value=0>
 						0
 					</div>
 				</div>
-				<div class="audio_type">
-					<img src="global/img/icons/audio.png" />
-					<div class="audio_counter count">
+				<div class="chat_type" style="display:inline-block">
+					<img class="tip" src="global/img/icons/chat.png" data-toggle="tooltip" title="Total count of chat posts"/>
+					<div class="chat_counter count" data-value=0>
 						0
 					</div>
 				</div>
-				<div class="video_type">
-					<img src="global/img/icons/video.png" />
-					<div class="video_counter count">
-						<div class="video"></div>
+				<div class="audio_type" style="display:inline-block">
+					<img class="tip" src="global/img/icons/audio.png" data-toggle="tooltip" title="Total count of audio posts"/>
+					<div class="audio_counter count" data-value=0>
+						0
+					</div>
+				</div>
+				<div class="video_type" style="display:inline-block">
+					<img class="tip" src="global/img/icons/video.png" data-toggle="tooltip" title="Total count of video posts"/>
+					<div class="video_counter count" data-value=0>
 						0
 					</div>
 				</div>
 			</div>
-			<div style='clear:both;'></div>
-		</div>
-
-		<div class="share" style="display:none;">
-			Share this or go back
 		</div>
 	</div>
 
 	<style>
-		.post_types {
-			text-align: center;
-			width: 100%;
-			margin: 0 auto;
-		}
-
 		.post_types div {
-			float:left;
-			text-align: center;
-			margin-right: 10px;
+			margin-right: 20px;
 		}
 
 		.post_types .count {
-			text-align: center;
+			margin-left: 20px;
 		}
-
 	</style>
-
 
 	<script>
 		$(document).ready(function() {
+			$('.tip').tooltip();
+
 			var totalPostCount = {{bloginfo.posts}};
 			var blogname = "{{blogname}}";
 			var collectedPostCounts = 0;
@@ -94,21 +80,38 @@
 
 			if (totalPostCount > 0) {
 				// we moeten blogposts ophalen
+				getPosts();
+			}
+
+			function checkMorePostNeeded() {
+				if (collectedPostCounts < totalPostCount) {
+					getPosts();
+				}
+			}
+
+			function getPosts() {
 				$.ajax({
 					type: 'POST',
 					url: 'posts/' + blogname ,
 					data: {offset: collectedPostCounts},
 					success: function(data) {
 						if (data.result && data.result.posts) {
-							if (data.result.stats) {
-								$.each(data.result.stats, function(i, v) {
+							if (data.result.types) {
+								$.each(data.result.types, function(i, v) {
 									var type = '.' + i + '_counter';
-									statsView.find(type).text(v);
+									var newValue = parseInt(statsView.find(type).attr('data-value')) + parseInt(v);
+									statsView.find(type).attr('data-value', newValue);
+									statsView.find(type).text(newValue);
 								});
 							}
+							if (data.result.tags) {
+								console.log(data.result.tags);
+							}
 							collectedPostCounts += data.result.posts.length;
-							console.log(collectedPostCounts);
 						}
+					},
+					complete: function() {
+						checkMorePostNeeded();
 					}
 				});
 			}
