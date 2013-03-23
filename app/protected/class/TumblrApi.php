@@ -16,7 +16,7 @@ class TumblrApi {
 	 * @param  boolean $curl   let curl handle the request
 	 * @return false if call failed or $response, array with the needed info 
 	 */
-	public function makeApiCall($method = '', $params = array(), $apiKey = true, $curl = true) {
+	public function makeApiCall($method = '', $params = array(), $apiKey = true, $curl = true, $check = true) {
 		$url = self::API_URL . $method;
 		$reqPar = array();
 
@@ -36,7 +36,7 @@ class TumblrApi {
 		}
 
 		if ($curl) {
-			return $this->_http($url);
+			return $this->_http($url, null, $check);
 		}
 
 		return $url;
@@ -55,6 +55,9 @@ class TumblrApi {
 		if ($response['meta']['status'] == 200) {
 			return $response['response'];
 		}
+		elseif ($response['meta']['status'] == 301) {
+			return $response['response']['avatar_url'];
+		}
 		else {
 			// something went wrong, log this?
 			return false;
@@ -65,7 +68,7 @@ class TumblrApi {
 	/**
 	 * This private function will handle the curl stuff
 	 */
-    private function _http($url, $post_data = null) {   
+    private function _http($url, $post_data = null, $check = true) {   
         $start = microtime(true);
         $ch = curl_init();
 
@@ -85,6 +88,12 @@ class TumblrApi {
         $this->last_api_call = $url;
         curl_close($ch);
 
-        return $this->_checkResponse($response);
+        if ($check) {
+        	return $this->_checkResponse($response);	
+        }
+        else {
+        	return $response;
+        }
+        
     }
 }
