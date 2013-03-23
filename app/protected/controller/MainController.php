@@ -8,6 +8,11 @@ class MainController extends DooController {
 			$blogname = $_POST['blogname'];
 			Doo::loadClass('TumblrManager');
 			$tumblr = new TumblrManager($blogname);
+			$blogInfo = $tumblr->getBlogInfo();
+			$posts = $tumblr->getPosts();
+			echo '<pre>';
+				var_dump($posts);
+			echo '</pre>';
 		}
 		return $this->view()->renderLayout('main', 'tumblr', $data);
 	}
