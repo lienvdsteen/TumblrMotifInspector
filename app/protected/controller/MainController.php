@@ -42,7 +42,8 @@ class MainController extends DooController {
 				$result = array(
 					'posts' => $posts,
 					'params' => $_POST['offset'],
-					'stats' => $stats
+					'types' => $stats['types'],
+					'tags' => $stats['tags']
 				);
 			}
 			else {
