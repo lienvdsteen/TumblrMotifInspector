@@ -656,8 +656,6 @@ class DooController {
 
     public function returnAjax($result, $error = false, $allowCallback = false, $wrap = true) {
         $ret = $wrap ? $this->_getAjaxToReturn($result, $error) : $result;
-      
-        // $this->session->messages = array();
         $this->setContentType('json');
         if ($allowCallback && $_GET['callback'])
             die($_GET['callback'] . "(" . json_encode($ret) . ");");
