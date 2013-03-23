@@ -57,6 +57,9 @@
 				</div>
 			</div>
 		</div>
+		<div class="tags">
+			
+		</div>
 	</div>
 
 	<style>
@@ -77,16 +80,32 @@
 			var blogname = "{{blogname}}";
 			var collectedPostCounts = 0;
 			var statsView = $('.post_types');
+			var finalTags = [];
 
 			if (totalPostCount > 0) {
 				// we moeten blogposts ophalen
 				getPosts();
 			}
 
+			function addTags(tags) {
+				$.each(tags, function(i, v) {
+					if (isNaN(finalTags[i])) {
+						finalTags[i] = v;
+					}
+					else {
+						finalTags[i] = finalTags[i] + v;	
+					}
+				});
+			}
+
 			function checkMorePostNeeded() {
 				if (collectedPostCounts < totalPostCount) {
 					getPosts();
 				}
+			}
+
+			function getTopTags() {
+
 			}
 
 			function getPosts() {
@@ -105,13 +124,14 @@
 								});
 							}
 							if (data.result.tags) {
-								console.log(data.result.tags);
+								addTags(data.result.tags);
 							}
 							collectedPostCounts += data.result.posts.length;
 						}
 					},
 					complete: function() {
 						checkMorePostNeeded();
+						getTopTags();
 					}
 				});
 			}
