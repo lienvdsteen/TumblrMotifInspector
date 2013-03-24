@@ -82,37 +82,41 @@
 			var statsView = $('.post_types');
 			var finalTags = [];
 
-			if (totalPostCount > 0) {
-				// we moeten blogposts ophalen
-				getTopTags();
-				getPosts();
-			}
-
-			function addTags(tags) {
+			var addTags = function(tags) {
 				$.each(tags, function(i, v) {
-					if (isNaN(finalTags[i])) {
-						finalTags[i] = v;
+					// eerst huidige waarde ophalen
+					var currentValue = finalTags[i];
+					if (typeof(currentValue) != 'undefined') {
+						finalTags[i] = currentValue + v;	
 					}
 					else {
-						finalTags[i] = finalTags[i] + v;	
+						finalTags[i] = v;	
 					}
 				});
+			};
+
+			var getTopTags = function() {
+				console.log(typeof(finalTags));
+				console.log(finalTags.length);
 			}
 
-			function checkMorePostNeeded() {
+			var checkMorePostNeeded = function() {
 				if (collectedPostCounts < totalPostCount) {
 					getPosts();
 				}
 				else {
-					
+					getTopTags();
+					// alle posts zijn binnen, extra verwerkingscalls
 				}
 			}
 
-			function getTopTags() {
-				
+			
+
+			var addPostsByType = function() {
+
 			}
 
-			function getPosts() {
+			var getPosts = function() {
 				$.ajax({
 					type: 'POST',
 					url: 'posts/' + blogname ,
@@ -128,10 +132,11 @@
 								});
 							}
 							if (data.result.tags) {
+								console.log(typeof(data.result.tags));
 								addTags(data.result.tags);
 							}
 							if (data.result.postsByDate) {
-								console.log(data.result.postsByDate);
+								// console.log(data.result.postsByDate);
 							}
 							collectedPostCounts += data.result.posts.length;
 						}
@@ -140,6 +145,12 @@
 						checkMorePostNeeded();
 					}
 				});
+			}
+
+			if (totalPostCount > 0) {
+				// we moeten blogposts ophalen
+				getTopTags();
+				getPosts();
 			}
 		});
 	</script>
