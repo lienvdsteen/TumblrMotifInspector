@@ -4,8 +4,11 @@ class MainController extends DooController {
 
 	public function index() {
 		$data['action'] = "index";
+		
 		if ($this->isPost()) {
-			$blogname = $this->escape($_POST['blogname']);
+			$origblogname = $this->escape($_POST['blogname']);
+			$blogname = $this->_stripBlogname($origblogname);
+			
 			Doo::loadClass('TumblrManager');
 			$tumblr = new TumblrManager($blogname);
 			$blogInfo = $tumblr->getBlogInfo();
@@ -21,10 +24,32 @@ class MainController extends DooController {
 			else {
 				// no bloginfo found (prob this blog doesn't exist, spelling mistake?)
 				// also when private blog..
-				$data['message'] = "We couldn't find any information for this blog: $blogname . Please try again."; 
+				$data['message'] = "We couldn't find any information for this blog: $origblogname . Please try again."; 
 			}
 		}
 		return $this->view()->renderLayout('main', 'tumblr', $data);
+	}
+
+	private function _stripBlogname($blogname) {
+		$http = strpos($blogname, 'http');
+		$https = strpos($blogname, 'https');
+		
+		if (is_numeric($https)) {
+			$newblog = substr($blogname, 8);
+			$blogname = $newblog;
+		}
+		elseif (is_numeric($http)) {
+			$newblog = substr($blogname, 7);
+			$blogname = $newblog;
+		}
+		
+		$tumblr = ".tumblr.com";
+		$domain = stripos($blogname, $tumblr);
+		if (is_numeric($domain)) {
+			$newblog = substr($blogname, 0, $domain);
+			$blogname = $newblog;	
+		}
+		return $blogname;
 	}
 
 	public function posts() {
@@ -43,7 +68,8 @@ class MainController extends DooController {
 					'posts' => $posts,
 					'params' => $_POST['offset'],
 					'types' => $stats['types'],
-					'tags' => $stats['tags']
+					'tags' => $stats['tags'],
+					'postsByDate' => $stats['postsByDate']
 				);
 			}
 			else {
