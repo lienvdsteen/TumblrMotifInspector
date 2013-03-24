@@ -58,7 +58,7 @@
 			</div>
 		</div>
 		<div class="tags">
-			
+			<div id="chart_container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
 		</div>
 	</div>
 
@@ -84,6 +84,7 @@
 
 			if (totalPostCount > 0) {
 				// we moeten blogposts ophalen
+				getTopTags();
 				getPosts();
 			}
 
@@ -102,10 +103,13 @@
 				if (collectedPostCounts < totalPostCount) {
 					getPosts();
 				}
+				else {
+					
+				}
 			}
 
 			function getTopTags() {
-
+				
 			}
 
 			function getPosts() {
@@ -126,12 +130,14 @@
 							if (data.result.tags) {
 								addTags(data.result.tags);
 							}
+							if (data.result.postsByDate) {
+								console.log(data.result.postsByDate);
+							}
 							collectedPostCounts += data.result.posts.length;
 						}
 					},
 					complete: function() {
 						checkMorePostNeeded();
-						getTopTags();
 					}
 				});
 			}

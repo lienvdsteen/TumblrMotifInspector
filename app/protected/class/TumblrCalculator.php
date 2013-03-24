@@ -9,6 +9,8 @@ class TumblrCalculator {
 
 		$types = array();
 		$tags = array();
+		$postsByDate = array(); //sorted per year, per month
+
 		foreach ($posts as $post) {
 			if (!isset($types[$post['type']])) {
 				$types[$post['type']] = 1;
@@ -26,10 +28,25 @@ class TumblrCalculator {
 					}
 				}
 			}
+			if (isset($post['timestamp']) && !empty($post['timestamp'])) {
+				// get year
+				// get month
+				$year = date("Y", $post['timestamp']);
+				$month = date("m", $post['timestamp']);
+
+				if (!isset($postsByDate[$year])) {
+					$postsByDate[$year] = array();
+					if (!isset($postsByDate[$year][$month])) {
+						$postsByDate[$year][$month] = array();
+					}
+				}
+				$postsByDate[$year][$month][] = $post;
+			}
 		}
 		return array(
 			'types' => $types,
-			'tags' => $tags
+			'tags' => $tags,
+			'postsByDate' => $postsByDate
 		);
 	}
 }
