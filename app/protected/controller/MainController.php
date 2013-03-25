@@ -64,11 +64,27 @@ class MainController extends DooController {
 				Doo::loadClass('TumblrCalculator');
 				$stats = TumblrCalculator::createStats($posts);
 
+				if (isset($_POST['currentTags'])) {
+					$testje = gettype($_POST['currentTags']);
+					// $currentTags = json_decode($_POST['currentTags']);
+				}
+				else {
+					$testje = false;
+				}
+				
+				/*
+				if (isset($_POST['currentTags']) && !empty($_POST['currentTags']) && isset($stats['tags']) && !empty($stats['tags'])) {
+					foreach ($stats['tags'] as $key => $value) {
+						
+					}
+				}
+				*/
+
 				$result = array(
 					'posts' => $posts,
-					'params' => $_POST['offset'],
+					'params' => $_POST,
 					'types' => $stats['types'],
-					'tags' => $stats['tags'],
+					'tags' => $testje,
 					'postsByDate' => $stats['postsByDate']
 				);
 			}

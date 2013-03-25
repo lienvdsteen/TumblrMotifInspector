@@ -83,6 +83,8 @@
 			var finalTags = [];
 
 			var addTags = function(tags) {
+				console.log(tags);
+				/*
 				$.each(tags, function(i, v) {
 					// eerst huidige waarde ophalen
 					var currentValue = finalTags[i];
@@ -93,11 +95,11 @@
 						finalTags[i] = v;	
 					}
 				});
+				*/
 			};
 
 			var getTopTags = function() {
-				console.log(typeof(finalTags));
-				console.log(finalTags.length);
+				
 			}
 
 			var checkMorePostNeeded = function() {
@@ -120,9 +122,10 @@
 				$.ajax({
 					type: 'POST',
 					url: 'posts/' + blogname ,
-					data: {offset: collectedPostCounts},
+					data: {offset: collectedPostCounts, currentTags: finalTags},
 					success: function(data) {
 						if (data.result && data.result.posts) {
+							console.log(data.result);
 							if (data.result.types) {
 								$.each(data.result.types, function(i, v) {
 									var type = '.' + i + '_counter';
@@ -132,8 +135,8 @@
 								});
 							}
 							if (data.result.tags) {
-								console.log(typeof(data.result.tags));
-								addTags(data.result.tags);
+								console.log(data.result.tags);
+								// addTags(data.result.tags);
 							}
 							if (data.result.postsByDate) {
 								// console.log(data.result.postsByDate);
@@ -149,7 +152,6 @@
 
 			if (totalPostCount > 0) {
 				// we moeten blogposts ophalen
-				getTopTags();
 				getPosts();
 			}
 		});
