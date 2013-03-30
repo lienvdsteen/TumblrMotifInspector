@@ -82,24 +82,8 @@
 			var statsView = $('.post_types');
 			var finalTags = [];
 
-			var addTags = function(tags) {
-				console.log(tags);
-				/*
-				$.each(tags, function(i, v) {
-					// eerst huidige waarde ophalen
-					var currentValue = finalTags[i];
-					if (typeof(currentValue) != 'undefined') {
-						finalTags[i] = currentValue + v;	
-					}
-					else {
-						finalTags[i] = v;	
-					}
-				});
-				*/
-			};
-
 			var getTopTags = function() {
-				
+				console.log('done');
 			}
 
 			var checkMorePostNeeded = function() {
@@ -122,7 +106,7 @@
 				$.ajax({
 					type: 'POST',
 					url: 'posts/' + blogname ,
-					data: {offset: collectedPostCounts, currentTags: finalTags},
+					data: {offset: collectedPostCounts},
 					success: function(data) {
 						if (data.result && data.result.posts) {
 							console.log(data.result);
@@ -136,8 +120,9 @@
 							}
 							if (data.result.tags) {
 								console.log(data.result.tags);
-								// addTags(data.result.tags);
+								finalTags = data.result.tags;
 							}
+
 							if (data.result.postsByDate) {
 								// console.log(data.result.postsByDate);
 							}

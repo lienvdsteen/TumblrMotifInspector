@@ -84,7 +84,7 @@ class MainController extends DooController {
 					'posts' => $posts,
 					'params' => $_POST,
 					'types' => $stats['types'],
-					'tags' => $testje,
+					'tags' => $stats['tags'],
 					'postsByDate' => $stats['postsByDate']
 				);
 			}
