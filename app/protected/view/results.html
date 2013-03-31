@@ -58,7 +58,7 @@
 			</div>
 		</div>
 		<div class="tags">
-			<div id="chart_container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+			<div id="tag_chart" style="width:100%; height:400px;"></div>
 		</div>
 	</div>
 
@@ -83,7 +83,10 @@
 			var finalTags = [];
 
 			var getTopTags = function() {
-				console.log('done');
+				while
+				$.each(finalTags, function(i, v) {
+					console.log(i + ':' + v);
+				});
 			}
 
 			var checkMorePostNeeded = function() {
@@ -91,22 +94,19 @@
 					getPosts();
 				}
 				else {
+					// alle posts zijn binnen, extra verwerkingsfuncties
 					getTopTags();
-					// alle posts zijn binnen, extra verwerkingscalls
 				}
 			}
 
-			
-
 			var addPostsByType = function() {
-
 			}
 
 			var getPosts = function() {
 				$.ajax({
 					type: 'POST',
 					url: 'posts/' + blogname ,
-					data: {offset: collectedPostCounts},
+					data: {offset: collectedPostCounts, tags: finalTags},
 					success: function(data) {
 						if (data.result && data.result.posts) {
 							console.log(data.result);
@@ -119,7 +119,6 @@
 								});
 							}
 							if (data.result.tags) {
-								console.log(data.result.tags);
 								finalTags = data.result.tags;
 							}
 

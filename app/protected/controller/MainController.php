@@ -64,21 +64,25 @@ class MainController extends DooController {
 				Doo::loadClass('TumblrCalculator');
 				$stats = TumblrCalculator::createStats($posts);
 
-				if (isset($_POST['currentTags'])) {
-					$testje = gettype($_POST['currentTags']);
-					// $currentTags = json_decode($_POST['currentTags']);
-				}
-				else {
-					$testje = false;
-				}
-				
-				/*
-				if (isset($_POST['currentTags']) && !empty($_POST['currentTags']) && isset($stats['tags']) && !empty($stats['tags'])) {
-					foreach ($stats['tags'] as $key => $value) {
-						
+				if (isset($_POST['tags']) && is_array($_POST['tags'])) {					
+					$oldTags = $_POST['tags'];
+					if (is_array($stats['tags']) && !empty($stats['tags'])) {
+						foreach ($oldTags as $key => $value) {
+							if (isset($stats['tags'][$key])) {
+								$stats['tags'][$key] += $value;
+							}
+							else {
+								$stats['tags'][$key] = $value;
+							}
+						}
+					}
+					if (is_array($stats['tags']) && !empty($stats['tags'])) {
+						foreach ($stats['tags'] as $key => $value) {
+							$stats['tags'][$key] = (int)$value;
+						}
+						arsort($stats['tags']);
 					}
 				}
-				*/
 
 				$result = array(
 					'posts' => $posts,
