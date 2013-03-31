@@ -76,6 +76,10 @@ class MainController extends DooController {
 							}
 						}
 					}
+					else {
+						// lege stats['tags'] maar geen lege post, we mogen deze dus niet kwijtspelen
+						$stats['tags'] = $oldTags;
+					}
 				}
 
 				if (is_array($stats['tags']) && !empty($stats['tags'])) {
@@ -90,6 +94,12 @@ class MainController extends DooController {
 						array_push($topTagsNew, $topTag);
 					}
 					arsort($topTags);
+				}
+
+				if (is_array($stats['postsByDate']) && !empty($stats['postsByDate'])) {
+					foreach ($stats['postsByDate'] as $key => $value) {
+						
+					}
 				}
 
 				$result = array(
