@@ -76,12 +76,20 @@ class MainController extends DooController {
 							}
 						}
 					}
-					if (is_array($stats['tags']) && !empty($stats['tags'])) {
-						foreach ($stats['tags'] as $key => $value) {
-							$stats['tags'][$key] = (int)$value;
-						}
-						arsort($stats['tags']);
+				}
+
+				if (is_array($stats['tags']) && !empty($stats['tags'])) {
+					foreach ($stats['tags'] as $key => $value) {
+						$stats['tags'][$key] = (int)$value;
 					}
+					arsort($stats['tags']);
+					$topTags = array_slice($stats['tags'], 0, 6);
+					$topTagsNew = array();
+					foreach ($topTags as $key => $value) {
+						$topTag = array('name' => $key, "y" => $value);
+						array_push($topTagsNew, $topTag);
+					}
+					arsort($topTags);
 				}
 
 				$result = array(
@@ -89,7 +97,8 @@ class MainController extends DooController {
 					'params' => $_POST,
 					'types' => $stats['types'],
 					'tags' => $stats['tags'],
-					'postsByDate' => $stats['postsByDate']
+					'postsByDate' => $stats['postsByDate'],
+					'topTags' => isset($topTagsNew) ? $topTagsNew : false
 				);
 			}
 			else {
