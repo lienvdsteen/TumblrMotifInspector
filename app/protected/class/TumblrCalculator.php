@@ -35,12 +35,19 @@ class TumblrCalculator {
 				$month = date("m", $post['timestamp']);
 
 				if (!isset($postsByDate[$year])) {
+					// jaar is nog nt gezet, dus zal de maand ook nog nt gezet zijn
 					$postsByDate[$year] = array();
+					$postsByDate[$year][$month] = 1;	
+				}
+				else {
+					// jaar is gezet, maar nu kan de maand evt nt gezet zijn
 					if (!isset($postsByDate[$year][$month])) {
-						$postsByDate[$year][$month] = array();
+						$postsByDate[$year][$month] = 1;
+					}
+					else {
+						$postsByDate[$year][$month]++;
 					}
 				}
-				$postsByDate[$year][$month][] = $post;
 			}
 		}
 		return array(
