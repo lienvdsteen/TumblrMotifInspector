@@ -8,3 +8,6 @@ app/protected/viewc/main/tumblr.php
 app/protected/viewc/main/results.php
 
 app/protected/viewc/*
+*.sublime-project
+
+*.sublime-workspace
