@@ -14,13 +14,13 @@ class TumblrApi {
 	 * @param  array   $params extra params that will be added to the url
 	 * @param  boolean $apiKey call with apikey needed?
 	 * @param  boolean $curl   let curl handle the request
-	 * @return false if call failed or $response, array with the needed info 
+	 * @return false if call failed or $response, array with the needed info
 	 */
 	public function makeApiCall($method = '', $params = array(), $apiKey = true, $curl = true, $check = true) {
 		$url = self::API_URL . $method;
 		$reqPar = array();
 
-		if (is_array($params) && !empty($params)) {	
+		if (is_array($params) && !empty($params)) {
 			foreach ($params as $key => $value) {
 				$reqPar[] = $key . '=' . $value;
 			}
@@ -62,13 +62,13 @@ class TumblrApi {
 			// something went wrong, log this?
 			return false;
 		}
-		
+
 	}
 
 	/**
 	 * This private function will handle the curl stuff
 	 */
-    private function _http($url, $post_data = null, $check = true) {   
+    private function _http($url, $post_data = null, $check = true) {
         $start = microtime(true);
         $ch = curl_init();
 
@@ -89,11 +89,10 @@ class TumblrApi {
         curl_close($ch);
 
         if ($check) {
-        	return $this->_checkResponse($response);	
+        	return $this->_checkResponse($response);
         }
         else {
         	return $response;
         }
-        
     }
 }
