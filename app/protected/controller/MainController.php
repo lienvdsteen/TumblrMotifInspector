@@ -4,17 +4,18 @@ class MainController extends DooController {
 
 	public function index() {
 		$data['action'] = "index";
-		
+
 		if ($this->isPost()) {
 			$origblogname = $this->escape($_POST['blogname']);
-			$blogname = $this->_stripBlogname($origblogname);
-			
+			Doo::loadClass('TumblrBlog');
+			$blogname = TumblrBlog::stripBlogname($origblogname);
+
 			Doo::loadClass('TumblrManager');
 			$tumblr = new TumblrManager($blogname);
 			$blogInfo = $tumblr->getBlogInfo();
 			if ($blogInfo) {
 				if ($blogInfo['posts'] == 0) {
-					$data['message'] = "This Tumblr doesn't have posts yet, so we can't calculate anything."; 	
+					$data['message'] = "This Tumblr doesn't have posts yet, so we can't calculate anything.";
 				}
 				$data['bloginfo'] = $blogInfo;
 				$data['avatar'] = $tumblr->getBlogAvatar();
@@ -24,33 +25,10 @@ class MainController extends DooController {
 			else {
 				// no bloginfo found (prob this blog doesn't exist, spelling mistake?)
 				// also when private blog..
-				$data['message'] = "We couldn't find any information for this blog: $origblogname . Please try again."; 
+				$data['message'] = "We couldn't find any information for this blog: $origblogname. Please try again.";
 			}
 		}
 		return $this->view()->renderLayout('main', 'tumblr', $data);
-	}
-
-	private function _stripBlogname($blogname) {
-		//@todo: allow custom urls (ex: thejoyofcode.com)
-		$http = strpos($blogname, 'http');
-		$https = strpos($blogname, 'https');
-		
-		if (is_numeric($https)) {
-			$newblog = substr($blogname, 8);
-			$blogname = $newblog;
-		}
-		elseif (is_numeric($http)) {
-			$newblog = substr($blogname, 7);
-			$blogname = $newblog;
-		}
-		
-		$tumblr = ".tumblr.com";
-		$domain = stripos($blogname, $tumblr);
-		if (is_numeric($domain)) {
-			$newblog = substr($blogname, 0, $domain);
-			$blogname = $newblog;	
-		}
-		return $blogname;
 	}
 
 	public function posts() {
@@ -79,14 +57,14 @@ class MainController extends DooController {
 									}
 									else {
 										// maand niet gezet ?
-										$stats['postsByDate'][$year][$month] = $value;	
+										$stats['postsByDate'][$year][$month] = $value;
 									}
 								}
 								else {
 									$stats['postsByDate'][$year] = array();
 									$stats['postsByDate'][$year][$month] = $value;
 								}
-							}	
+							}
 						}
 					}
 					else {
@@ -119,7 +97,7 @@ class MainController extends DooController {
 
 				}
 
-				if (isset($_POST['tags']) && is_array($_POST['tags'])) {					
+				if (isset($_POST['tags']) && is_array($_POST['tags'])) {
 					$oldTags = $_POST['tags'];
 					if (is_array($stats['tags']) && !empty($stats['tags'])) {
 						foreach ($oldTags as $key => $value) {
@@ -165,9 +143,9 @@ class MainController extends DooController {
 			else {
 				// foutje met url
 			}
-			
+
 			$this->returnAjax($result);
-		} 
+		}
 
 	}
 
