@@ -1,10 +1,11 @@
 <?php
- 
+
 $route['*']['/'] = array('MainController', 'index');
 $route['*']['/tumblr'] = array('MainController', 'index');
 $route['*']['/about'] = array('MainController', 'about');
 $route['*']['/contact'] = array('MainController', 'contact');
 $route['*']['/posts/:blogname'] = array('MainController', 'posts');
+$route['*']['/compare'] = array('CompareController', 'compare');
 $route['*']['/error'] = array('ErrorController', 'index');
 
 //---------- Delete if not needed ------------
